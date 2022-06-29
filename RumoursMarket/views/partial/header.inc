@@ -21,7 +21,7 @@
                     <!-- DONE: navigation -->
                     <?php $link('SCR4 Rumours Market', 'Home', 'Index', cssClass: 'nav-link'); ?>
                     <?php $link('Persons', 'Users', 'Index', cssClass: 'nav-link'); ?>
-                    <?php $link('Order', 'Order', 'Create', cssClass: 'nav-link'); ?>
+                    <?php $link('My Blog', 'Blogs', 'Index', cssClass: 'nav-link'); ?>
                 </nav>
                 <!-- TODO: navigation user -->
                 <?php $render('partial/user', $data['user']); ?>

@@ -7,7 +7,8 @@ implements
     \Application\Interfaces\BookRepository,
     \Application\Interfaces\CategoryRepository,
     \Application\Interfaces\OrderRepository,
-    \Application\Interfaces\UserRepository
+    \Application\Interfaces\UserRepository,
+    \Application\Interfaces\BlogRepository
 {
     private $server;
     private $userName;
@@ -230,5 +231,25 @@ implements
         $con->commit();
         $con->close();
         return $orderId;
+    }
+
+    public function getBlogsForUser(int $userId): array
+    {
+        $blogEntries = [];
+        $con = $this->getConnection();
+        $stat = $this->executeStatement(
+            $con,
+            'SELECT id, userid, datum, betreff, blogtext FROM blog WHERE userid = ? ORDER BY datum DESC',
+            function ($s) use ($userId) {
+                $s->bind_param('i', $userId);
+            }
+        );
+        $stat->bind_result($id,$userid,$datum,$betreff,$blogtext);
+        while ($stat->fetch()) {
+            $blogEntries[] = new \Application\Entities\BlogEntry($id,$userid,$datum,$betreff,$blogtext);
+        }
+        $stat->close();
+        $con->close();
+        return $blogEntries;
     }
 }

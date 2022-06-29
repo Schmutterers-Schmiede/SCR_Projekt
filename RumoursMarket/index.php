@@ -14,6 +14,7 @@ $sp = new \ServiceProvider();
 // --- APPLICATION
 $sp->register(\Application\AddBookToCartCommand::class);
 $sp->register(\Application\BooksQuery::class);
+$sp->register(\Application\BlogQuery::class);
 $sp->register(\Application\UsersQuery::class);
 $sp->register(\Application\CategoriesQuery::class);
 $sp->register(\Application\CheckOutCommand::class);
@@ -31,6 +32,7 @@ $sp->register(\Presentation\MVC\MVC::class, function () {
 }, isSingleton: true);
 // controllers
 $sp->register(\Presentation\Controllers\Books::class);
+$sp->register(\Presentation\Controllers\Blogs::class);
 $sp->register(\Presentation\Controllers\Cart::class);
 $sp->register(\Presentation\Controllers\Home::class);
 $sp->register(\Presentation\Controllers\Order::class);
@@ -43,6 +45,7 @@ $sp->register(\Application\Interfaces\Session::class, \Infrastructure\Session::c
 $sp->register(\Infrastructure\Repository::class, implementation: function() {
     return new \Infrastructure\Repository('localhost', 'root', '', 'rumourmarket');}, isSingleton: true);
 $sp->register(\Application\Interfaces\BookRepository::class, \Infrastructure\Repository::class);    //statt FakeRepo nur Repository hinschreiben
+$sp->register(\Application\Interfaces\BlogRepository::class, \Infrastructure\Repository::class);    //statt FakeRepo nur Repository hinschreiben
 $sp->register(\Application\Interfaces\CategoryRepository::class, \Infrastructure\Repository::class);
 $sp->register(\Application\Interfaces\OrderRepository::class, \Infrastructure\Repository::class);
 $sp->register(\Application\Interfaces\UserRepository::class, \Infrastructure\Repository::class);
