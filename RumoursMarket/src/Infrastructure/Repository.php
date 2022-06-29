@@ -110,21 +110,21 @@ implements
         $con->close();
         return $books;
     }
-
+     
     public function getUser(int $id): ?\Application\Entities\User
     {
         $user = null;
         $con = $this->getConnection();
         $stat = $this->executeStatement(
             $con,
-            'SELECT id, userName, passwordHash FROM users WHERE id = ?',
+            'SELECT id, login, userName, creationDate, passwordHash FROM users WHERE id = ?',
             function ($s) use ($id) {
                 $s->bind_param('i', $id);
             }
         );
-        $stat->bind_result($id, $userName, $passwordHash);
+        $stat->bind_result($id, $login, $userName, $creationDate, $passwordHash);
         if ($stat->fetch()) {
-            $user = new \Application\Entities\User($id, $userName, $passwordHash);
+            $user = new \Application\Entities\User($id, $login, $userName, $creationDate, $passwordHash);
         }
         $stat->close();
         $con->close();
@@ -137,29 +137,50 @@ implements
         $con = $this->getConnection();
         $stat = $this->executeStatement(
             $con,
-            'SELECT id, userName, passwordHash FROM users WHERE userName = ?',
+            'SELECT id, login, userName, creationDate, passwordHash FROM users WHERE userName = ?',
             function ($s) use ($userName) {
                 $s->bind_param('s', $userName);
             }
         );
-        $stat->bind_result($id, $userName, $passwordHash);
+        $stat->bind_result($id, $login, $userName, $creationDate, $passwordHash);
         if ($stat->fetch()) {
-            $user = new \Application\Entities\User($id, $userName, $passwordHash);
+            $user = new \Application\Entities\User($id, $login, $userName, $creationDate, $passwordHash);
         }
         $stat->close();
         $con->close();
         return $user;
     }
 
-    public function addUser(string $userName, string $pwdHash): ?int
+    public function getUserForLogin(string $login): ?\Application\Entities\User
     {
+        $user = null;
+        $con = $this->getConnection();
+        $stat = $this->executeStatement(
+            $con,
+            'SELECT id, login, userName, creationDate, passwordHash FROM users WHERE login = ?',
+            function ($s) use ($login) {
+                $s->bind_param('s', $login);
+            }
+        );
+        $stat->bind_result($id, $login, $userName, $creationDate, $passwordHash);
+        if ($stat->fetch()) {
+            $user = new \Application\Entities\User($id, $login, $userName, $creationDate, $passwordHash);
+        }
+        $stat->close();
+        $con->close();
+        return $user;
+    }
+
+    public function addUser(string $login, string $userName, string $pwdHash): ?int
+    {
+        $creationDate = date('Y-m-d H:i:s');
         $con = $this->getConnection();
         $con->autocommit(false);
         $stat = $this->executeStatement(
             $con,
-            'INSERT INTO users (userName, passwordHash) VALUES (?, ?)',
-            function ($s) use ($userName, $pwdHash) {
-                $s->bind_param('ss', $userName, $pwdHash);
+            'INSERT INTO users (login, userName, creationDate, passwordHash) VALUES (?, ?, ?, ?)',
+            function ($s) use ($login, $userName, $creationDate, $pwdHash) {
+                $s->bind_param('ssss', $login, $userName, $creationDate, $pwdHash);
             }
         );
         $userId = $stat->insert_id;

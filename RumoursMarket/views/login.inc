@@ -4,8 +4,8 @@
 
 <?php $beginForm('User', 'LogIn', method: 'post'); ?>
 <div class="mb-3">
-    <label for="userName" class="form-label">User name</label>
-    <input class="form-control" id="userName" name="un" value="<?php $htmlOut($data['userName']); ?>">
+    <label for="login" class="form-label">Login</label>
+    <input class="form-control" id="login" name="ln" value="<?php $htmlOut($data['login']); ?>">
 </div>
 <div class="mb-3">
     <label for="password" class="form-label">Password</label>

@@ -13,23 +13,27 @@ class AddUserCommand {
     }
 
     const Error_UserEmpty = 0x01;
-    const Error_PasswordEmpty = 0x02;
-    const Error_PasswordNotEqual = 0x04;
+    const Error_LoginEmpty = 0x02;
+    const Error_PasswordEmpty = 0x04;
+    const Error_PasswordNotEqual = 0x08;
     const Error_AddUserFailed = 0x10;
-    public function execute(string $userName, string $pwd, string $cfpwd): int {
+    public function execute(string $login, string $userName, string $pwd, string $cfpwd): int {
         $userName = trim($userName);
+        $login = trim($login);
         $userId = null;
         $pwdHash = null;
 
         $errors = 0;
 
-        if(strlen($userName)==0) {
-            error_log('No Username found!',0);
+        if(strlen($login) == 0) {
+            $errors |= self::Error_LoginEmpty;
+        }
+
+        if(strlen($userName) == 0) {
             $errors |= self::Error_UserEmpty;
         }
 
-        if(strlen($pwd)==0) {
-           error_log('No Password found!',0);
+        if(strlen($pwd) == 0) {
            $errors |=self::Error_PasswordEmpty;
         }
      
@@ -38,16 +42,12 @@ class AddUserCommand {
         }
 
         if (strcmp($cfpwd,$pwd) != 0) {
-            error_log('Password: ' . $pwd . ' Hash: ' . $pwdHash,0);
-            error_log('Confirm:  ' . $cfpwd .' Hash ' . password_hash($cfpwd,PASSWORD_DEFAULT),0);
-            error_log("Passwordhash not equal",0);
-            return self::Error_PasswordNotEqual;
+             return self::Error_PasswordNotEqual;
         }
 
         $pwdHash = password_hash($pwd,PASSWORD_DEFAULT);
-        $userId = $this->userRepository->addUser($userName, $pwdHash);
+        $userId = $this->userRepository->addUser($login, $userName, $pwdHash);
         if($userId == null) {
-            error_log("Benutzer nicht gespeichert!",0);
             return self::Error_AddUserFailed;
         }
         return 0;

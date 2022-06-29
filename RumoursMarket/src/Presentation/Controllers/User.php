@@ -9,24 +9,23 @@ class User extends \Presentation\MVC\Controller {
         private \Application\SignedInUserQuery $signedInUserQuery,
         private \Application\AddUserCommand $addUserCommand
         )
-        {
-            
+        {          
         }
 
     public function GET_LogIn(): \Presentation\MVC\ActionResult {
         return $this->view('login', [
             'user' => $this->signedInUserQuery->execute(),
-            'userName' => ''    // weil erstmaliger Aufruf der Login Page // '' <=> null <=> 0
+            'login' => ''    // weil erstmaliger Aufruf der Login Page // '' <=> null <=> 0
         ]);
     }
 
     public function POST_LogIn(): \Presentation\MVC\ActionResult {
         // Try to authenticate given uer
-        if(!$this->signInCommand->execute($this->getParam('un'), $this->getParam('pwd'))) {
+        if(!$this->signInCommand->execute($this->getParam('ln'), $this->getParam('pwd'))) {
             // authentication failed - nothing has changed, show view with error informaion
             return $this->view('login', [
                 'user' => $this->signedInUserQuery->execute(),
-                'userName' => $this->getParam('un'),
+                'login' => $this->getParam('ln'),
                 'errors' => [ 'Invalid user name or password.' ]
             ]);
         }
@@ -42,6 +41,7 @@ class User extends \Presentation\MVC\Controller {
     public function GET_AddUser(): \Presentation\MVC\ActionResult {
         return $this->view('adduser', [
             'user' => $this->signedInUserQuery->execute(),
+            'login' => '',
             'userName' => '',    // weil Neuer User // '' <=> null <=> 0
             'password' => '',    // weil Neuer User // '' <=> null <=> 0
             'confirmPassword' => '' // weil Neuer User // '' <=> null <=> 0
@@ -49,9 +49,10 @@ class User extends \Presentation\MVC\Controller {
     }
 
     public function POST_AddUser(): \Presentation\MVC\ActionResult {
-        $usrerror = $this->addUserCommand->execute($this->getParam('un'),$this->getParam('pwd'),$this->getParam('cfpwd'));
+        $usrerror = $this->addUserCommand->execute($this->getParam('ln'), $this->getParam('un'), $this->getParam('pwd'), $this->getParam('cfpwd'));
         if( $usrerror > 0) {
             $errMsg[] = 'Invalid user name or password.';
+
             if($usrerror & 0x01) {
                 $errMsg[] = 'Username is empty';
             }
