@@ -190,6 +190,19 @@ implements
         return $userId;
     }
 
+    public function getUsers(): array
+    {
+        $users = [];
+        $con = $this->getConnection();
+        $res = $this->executeQuery($con, 'SELECT id, login, userName, creationDate, passwordHash FROM users');
+        while ($user = $res->fetch_object()) {
+            $users[] = new \Application\Entities\User($user->id,$user->login,$user->userName,$user->creationDate,$user->passwordHash);
+        }
+        $res->close();
+        $con->close();
+        return $users;
+    }
+
     public function createOrder(int $userId, array $bookIdsWithCount, string $creditCardName, string $creditCardNumber): ?int
     {
         $con = $this->getConnection();

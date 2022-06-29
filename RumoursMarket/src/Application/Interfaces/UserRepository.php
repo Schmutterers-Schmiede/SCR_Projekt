@@ -7,4 +7,5 @@ interface UserRepository {
     public function getUserForUserName(string $userName): ?\Application\Entities\User;
     public function getUserForLogin(string $login): ?\Application\Entities\User;
     public function addUser(string $login, string $userName, string $pwdHash): ?int;
+    public function getUsers (): array;
 }

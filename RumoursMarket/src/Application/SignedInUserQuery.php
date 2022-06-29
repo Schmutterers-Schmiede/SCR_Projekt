@@ -20,6 +20,6 @@ class SignedInUserQuery
         if ($user === null) {
             return null;
         }
-        return new UserData($user->getId(), $user->getUserName());
+        return new UserData($user->getId(), $user->getUserName(), $user->getCreationDate());
     }
 }

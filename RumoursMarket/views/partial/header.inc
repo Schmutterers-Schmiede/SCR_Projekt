@@ -20,7 +20,7 @@
                 <nav class="navbar-nav me-auto">
                     <!-- DONE: navigation -->
                     <?php $link('SCR4 Rumours Market', 'Home', 'Index', cssClass: 'nav-link'); ?>
-                    <?php $link('List', 'Books', 'Index', cssClass: 'nav-link'); ?>
+                    <?php $link('Persons', 'Users', 'Index', cssClass: 'nav-link'); ?>
                     <?php $link('Order', 'Order', 'Create', cssClass: 'nav-link'); ?>
                 </nav>
                 <!-- TODO: navigation user -->

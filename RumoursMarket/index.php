@@ -14,6 +14,7 @@ $sp = new \ServiceProvider();
 // --- APPLICATION
 $sp->register(\Application\AddBookToCartCommand::class);
 $sp->register(\Application\BooksQuery::class);
+$sp->register(\Application\UsersQuery::class);
 $sp->register(\Application\CategoriesQuery::class);
 $sp->register(\Application\CheckOutCommand::class);
 $sp->register(\Application\RemoveBookFromCartCommand::class);
@@ -34,6 +35,7 @@ $sp->register(\Presentation\Controllers\Cart::class);
 $sp->register(\Presentation\Controllers\Home::class);
 $sp->register(\Presentation\Controllers\Order::class);
 $sp->register(\Presentation\Controllers\User::class);
+$sp->register(\Presentation\Controllers\Users::class);
 
 // --- INFRASTRUCTURE
 $sp->register(\Infrastructure\Session::class, isSingleton: true);   // !! Important damit start_session nur einmal aufgerufen wird
