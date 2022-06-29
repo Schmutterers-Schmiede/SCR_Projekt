@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 29. Jun 2022 um 09:01
+-- Erstellungszeit: 29. Jun 2022 um 09:22
 -- Server-Version: 10.4.24-MariaDB
 -- PHP-Version: 8.1.6
 
@@ -84,7 +84,8 @@ ALTER TABLE `blog`
 -- Indizes für die Tabelle `likes`
 --
 ALTER TABLE `likes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `blog_user` (`userid`,`blogid`);
 
 --
 -- Indizes für die Tabelle `users`
